@@ -1,0 +1,61 @@
+name: React CI/CD to FTP Server
+
+on:
+  push:
+    branches:
+      - main     # deploy jab 'main' branch me push ho
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      # 1️⃣ Checkout repo code
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      # 2️⃣ Setup Node.js
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+          cache: 'npm'
+
+      # 3️⃣ Install dependencies
+      - name: Install Dependencies
+        run: |
+          if [ -f package-lock.json ]; then
+            npm ci --no-audit --no-fund
+          else
+            npm install --no-audit --no-fund
+          fi
+        env:
+          CI: true
+
+      # 4️⃣ Build the React project
+      - name: Build Project
+        run: npm run build
+        env:
+          CI: true
+
+      # 5️⃣ Deploy build folder to FTP
+      - name: Deploy via FTP
+        uses: SamKirkland/FTP-Deploy-Action@v4.3.4
+        with:
+          server: ${{ secrets.FTP_SERVER }}
+          username: ${{ secrets.FTP_USERNAME }}
+          password: ${{ secrets.FTP_PASSWORD }}
+          port: ${{ secrets.FTP_PORT }}
+          protocol: ftp
+          local-dir: build/
+          server-dir: ./
+          dangerous-clean-slate: false
+          exclude: |
+            **/.git*
+            **/.github*
+            **/node_modules/**
+            **/src/**
+            **/public/**
+            **/README.md
+            package.json
+            package-lock.json
