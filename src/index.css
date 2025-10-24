@@ -1,0 +1,35 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    font-family: system-ui, Avenir, Helvetica, Arial, sans-serif;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  body {
+    @apply m-0 min-h-screen bg-gray-50;
+  }
+
+  a {
+    @apply font-medium text-indigo-600 hover:text-indigo-500;
+  }
+
+  h1 {
+    @apply text-4xl font-bold tracking-tight text-gray-900 sm:text-5xl md:text-6xl;
+  }
+
+  h2 {
+    @apply text-3xl font-bold tracking-tight text-gray-900 sm:text-4xl;
+  }
+
+  h3 {
+    @apply text-2xl font-bold text-gray-900;
+  }
+
+  h4 {
+    @apply text-xl font-bold text-gray-900;
+  }
+}
